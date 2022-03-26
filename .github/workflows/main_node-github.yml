@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy container app to Azure Web App - node-github
+name: Deploy a container from GitHub Container Registry to Azure App Service
 
 on:
   push:
@@ -9,41 +9,26 @@ on:
       - main
   workflow_dispatch:
 
+
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+    - name: Build the docker image
+      run: docker build -t ghcr.io/${{ github.actor }}/${{ github.repository }}:${{ github.sha }}
 
-    - name: Log in to registry
-      run: |
-        export CR_PAT=${{ secrets.PAT }}
-        echo $CR_PAT | docker login ghcr.io -u victorvoorhees --password-stdin
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    
+    - name: Push the docker image onto the registry
+      run: docker push ghcr.io/${{ github.actor }}/${{ github.repository }}:${{ github.sha }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: ghcr.io/victorvoorhees/node-github:${{ github.sha }}
-        file: ./Dockerfile
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
+    - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'node-github'
-        slot-name: 'production'
+        app-name: '${{ github.repository }}'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_22706051ebd94d7c92d990a48e946dd9 }}
-        images: 'ghcr.io/victorvoorhees/node-github:${{ github.sha }}'
+        images: 'ghcr.io/${{ github.actor }}/${{ github.repository }}:${{ github.sha }}'
