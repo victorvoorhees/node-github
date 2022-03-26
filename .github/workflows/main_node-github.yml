@@ -10,6 +10,12 @@ on:
   workflow_dispatch:
 
 
+env:
+  REPO: node-github
+  PAT: ${{ secrets.PAT }}
+  PUBLISH_PROFILE: ${{ secrets.AzureAppService_PublishProfile_22706051ebd94d7c92d990a48e946dd9 }}
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,17 +24,17 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build the docker image
-      run: docker build -t ghcr.io/victorvoorhees/${{ github.repository }}:${{ github.sha }} .
+      run: docker build -t ghcr.io/victorvoorhees/${{ env.REPO }}:${{ github.sha }} .
 
     - name: Log in to GitHub Container Registry
-      run: echo ${{ secrets.PAT }} | docker login ghcr.io -u victorvoorhees --password-stdin
+      run: echo ${{ env.PAT }} | docker login ghcr.io -u victorvoorhees --password-stdin
     
     - name: Push the docker image onto the registry
-      run: docker push ghcr.io/victorvoorhees/${{ github.repository }}:${{ github.sha }}
+      run: docker push ghcr.io/victorvoorhees/${{ env.REPO }}:${{ github.sha }}
 
     - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
-        app-name: '${{ github.repository }}'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22706051ebd94d7c92d990a48e946dd9 }}
-        images: 'ghcr.io/victorvoorhees/${{ github.repository }}:${{ github.sha }}'
+        app-name: '${{ env.REPO }}'
+        publish-profile: ${{ env.PUBLISH_PROFILE }}
+        images: 'ghcr.io/victorvoorhees/${{ env.REPO }}:${{ github.sha }}'
