@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: https://ghcr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_878391a28a514b55a5331e8a7e9df6a6 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_bcc5b2c8727a4efb8c02bd6c3b5dfcc2 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_a4c5e8bb8a0143069faeeccbeffb5921 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_30792c6bc994482b93ea2095f0c79df0 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_878391a28a514b55a5331e8a7e9df6a6 }}/victorvoorhees/node-github:${{ github.sha }}
+        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a4c5e8bb8a0143069faeeccbeffb5921 }}/victorvoorhees/node-github:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'node-github'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ed820d5a9f574d3f9116b483e470cd70 }}
-        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_878391a28a514b55a5331e8a7e9df6a6 }}/victorvoorhees/node-github:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_22706051ebd94d7c92d990a48e946dd9 }}
+        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a4c5e8bb8a0143069faeeccbeffb5921 }}/victorvoorhees/node-github:${{ github.sha }}'
