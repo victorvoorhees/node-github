@@ -28,7 +28,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a4c5e8bb8a0143069faeeccbeffb5921 }}/victorvoorhees/node-github:${{ github.sha }}
+        tags: ghcr.io/victorvoorhees/node-github:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -46,4 +46,4 @@ jobs:
         app-name: 'node-github'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_22706051ebd94d7c92d990a48e946dd9 }}
-        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_a4c5e8bb8a0143069faeeccbeffb5921 }}/victorvoorhees/node-github:${{ github.sha }}'
+        images: 'ghcr.io/victorvoorhees/node-github:${{ github.sha }}'
