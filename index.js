@@ -15,7 +15,7 @@ https.get('https://jsonplaceholder.typicode.com/users', res => {
     
         let dom = '';
         data.forEach(item => {
-            dom += `<div style='background: whitesmoke; border-radius: 0.5em; padding: 2.5em'><h2 style='margin: 0 0 0.5em 0;'>${item.name}</h2><p style='margin: 0;'>${item.email}</p></div>`;
+            dom += `<div style='background: black; border-radius: 0.5em; padding: 2.5em'><h2 style='color: white; margin: 0 0 0.5em 0;'>${item.name}</h2><p style='color: white; margin: 0;'>${item.email}</p></div>`;
         })
         dom = `<div style='display: grid; grid-template-columns: 1fr 1fr 1fr; font-family: Segoe UI; gap: 25px; margin: 0 auto 0 auto; padding-top: 50px; width: fit-content'>${dom}</div>`;
 
